@@ -62,5 +62,3 @@ Improving a graphical user interface (GUI) for a more interactive user experienc
 Integrating a database to store user scores and track progress.
 Adding timed quizzes for an extra challenge.
 Expanding categories with more diverse topics.
-License
-This project is open-source and licensed under the MIT License.
