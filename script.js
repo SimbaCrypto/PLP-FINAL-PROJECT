@@ -1,7 +1,7 @@
 const questions = [
     {
         question: "What does SDG 4 focus on?",
-        options: ["Zero Hunger", "Clean Water", "Climate Action",  "Quality Education"],
+        options: ["Quality Education", "Clean Water", "Climate Action", "Zero Hunger"],
         answer: "Quality Education"
     },
     {
@@ -11,11 +11,9 @@ const questions = [
     },
     {
         question: "What is the goal of SDG 3?",
-        options: ["Affordable and Clean Energy", "Gender Equality",  "Good Health and Well-being", "Responsible Consumption"],
+        options: ["Good Health and Well-being", "Gender Equality", "Affordable and Clean Energy", "Responsible Consumption"],
         answer: "Good Health and Well-being"
     }
-
-    
     // Add more questions here...
 ];
 
