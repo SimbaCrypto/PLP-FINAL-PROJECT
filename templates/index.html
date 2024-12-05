@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    
+</head>
+
+<h1>Welcome to CerebIQ</h1>
+
+<body>
+    <div class="app">
+        <h2>Start Quiz</h2>
+        <div class="quiz">
+            <h2 id="question"></h2>
+            <div id="answer-buttons"></div>
+            <button id="next-btn" onclick="loadNextQuestion()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let score = 0;
+    
+        // Fetch questions from the backend
+        async function fetchQuestions() {
+            const response = await fetch('/api/questions');
+            const data = await response.json();
+            questions = data.questions;
+            displayQuestion();
+        }
+    
+        // Display the current question
+        function displayQuestion() {
+            const questionElement = document.getElementById('question');
+            const answerButtonsElement = document.getElementById('answer-buttons');
+            const nextButton = document.getElementById('next-btn');
+    
+            const currentQuestion = questions[currentQuestionIndex];
+    
+            questionElement.textContent = currentQuestion.question;
+            answerButtonsElement.innerHTML = ''; // Clear previous answers
+    
+            currentQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.classList.add('btn');
+                button.onclick = () => selectAnswer(index, currentQuestion.correct);
+                answerButtonsElement.appendChild(button);
+            });
+    
+            nextButton.style.display = 'none'; // Hide next button initially
+        }
+    
+        // Handle answer selection
+        function selectAnswer(selectedIndex, correctIndex) {
+            const answerButtons = document.querySelectorAll('.btn');
+            answerButtons.forEach((button, index) => {
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    button.classList.add('incorrect');
+                }
+                button.disabled = true;
+            });
+    
+            if (selectedIndex === correctIndex) {
+                score++; // Increment score for a correct answer
+            }
+    
+            document.getElementById('next-btn').style.display = 'block'; // Show next button
+        }
+    
+        // Load the next question
+        function loadNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                displayFinalScore();
+            }
+        }
+    
+        // Display the final score
+        function displayFinalScore() {
+            const quizElement = document.querySelector('.quiz');
+            quizElement.innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>You scored ${score} out of ${questions.length}.</p>
+                <button onclick="restartQuiz()" class="btn">Restart Quiz</button>
+            `;
+        }
+    
+        // Restart the quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            fetchQuestions();
+        }
+    
+        // Initialize the quiz
+        fetchQuestions();
+    </script>
+    
