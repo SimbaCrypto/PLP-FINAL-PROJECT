@@ -1,20 +1,89 @@
 /* styles.css */
+body {
+  /* ... other styles ... */
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+h1 {
+  /* ... other styles ... */
+  margin-top: 50px; 
+  font-size: 3em;
+}
+
 
 body {
-    /* ... other styles ... */
-    display: flex;
-    flex-direction: column; /* Ensure vertical layout */
-    align-items: center; /* Center the header horizontally */
-  }
-  
-  h1 {
-    /* ... other styles ... */
-    margin-top: 50px; /* Adjust top margin as needed */
-    font-size: 3em;
-  }
-  
-  
-  body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f6;
+  color: #005f73;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.app {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h1 {
+  color: #0a9396;
+  margin-bottom: 20px;
+}
+
+.quiz {
+  padding: 10px;
+}
+
+#question {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+#answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input[type="radio"] {
+  margin-right: 8px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ee9b00;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:disabled {
+  background-color: #c1c1c1;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #d17b00;
+}
+
+
+/* Login/Signup Styling */
+
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -24,9 +93,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
-  
-  .app {
+}
+
+.container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
@@ -34,34 +103,41 @@ body {
     width: 90%;
     max-width: 400px;
     text-align: center;
-  }
-  
-  h1 {
+}
+
+h1 {
     color: #0a9396;
     margin-bottom: 20px;
-  }
-  
-  .quiz {
-    padding: 10px;
-  }
-  
-  #question {
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-  }
-  
-  #answer-buttons {
+}
+
+form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+}
+
+label {
+    text-align: left;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #005f73;
+}
+
+input {
+    padding: 10px;
     margin-bottom: 20px;
-  }
-  
-  input[type="radio"] {
-    margin-right: 8px;
-  }
-  
-  button {
+    border: 1px solid #c1c1c1;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #005f73;
+}
+
+input:focus {
+    border-color: #0a9396;
+    outline: none;
+    box-shadow: 0 0 5px rgba(10, 147, 150, 0.5);
+}
+
+button {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
@@ -70,14 +146,28 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  button:disabled {
+}
+
+button:hover {
+    background-color: #d17b00;
+}
+
+button:disabled {
     background-color: #c1c1c1;
     cursor: not-allowed;
-  }
-  
-  button:hover:not(:disabled) {
-    background-color: #d17b00;
-  }
-  
+}
+
+p {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #0a9396;
+}
+
+p a {
+    color: #ee9b00;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}

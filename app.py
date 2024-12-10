@@ -1,9 +1,24 @@
-from flask import Flask, jsonify, render_template, request
-import random
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
-# Sample questions
+# Database setup
+def init_db():
+    with sqlite3.connect('users.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            username TEXT UNIQUE NOT NULL,
+                            password TEXT NOT NULL
+                          )''')
+        conn.commit()
+
+init_db()
+
+# Sample questions (your existing questions remain unchanged)
 QUESTIONS = [
     {
         "id": 1,
@@ -68,25 +83,68 @@ QUESTIONS = [
     
 ]
 
-
-# Shuffle the questions
+# Shuffle questions
+import random
 random.shuffle(QUESTIONS)
 
-# Shuffle the answers for each question
-for question in QUESTIONS:
-    random.shuffle(question["answers"])
-    # Update the correct index to match the shuffled answers
-    question["correct"] = question["answers"].index(question["answers"][question["correct"]])
-
-
-# Route to serve the HTML frontend
 @app.route('/')
-def index():
+def home():
+    if 'user_id' in session:
+        return redirect(url_for('quiz'))
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        with sqlite3.connect('users.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, password FROM users WHERE username = ?', (username,))
+            user = cursor.fetchone()
+
+            if user and check_password_hash(user[1], password):
+                session['user_id'] = user[0]
+                return redirect(url_for('quiz'))
+            else:
+                return "Invalid credentials, try again."
+
+    return render_template('login.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = generate_password_hash(password)
+
+        with sqlite3.connect('users.db') as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+                conn.commit()
+                return redirect(url_for('login'))
+            except sqlite3.IntegrityError:
+                return "Username already exists, try another."
+
+    return render_template('signup.html')
+
+@app.route('/quiz')
+def quiz():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     return render_template('index.html')
 
-# API to fetch questions
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('login'))
+
 @app.route('/api/questions', methods=['GET'])
 def get_questions():
+    if 'user_id' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
     return jsonify({"questions": QUESTIONS})
 
 if __name__ == "__main__":
